@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>FakeTube</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> 
+    <script src="{{ url_for('static', filename='js/commonActions.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/userActions.js') }}"></script>
+
+  </head>
+  <body>
+    
+    <div id="pageContainer">
+
+      <div id="mastHeadContainer">
+        <button class="navShowHide">
+          <img src="{{ url_for('static', filename='images/icons/menu.png') }}">
+        </button>
+
+        <a class="logoContainer" href="{{ url_for('index') }}">
+          <img src="{{ url_for('static', filename='images/icons/VideoTubeLogo.png') }}" title="logo" alt="Site logo">
+        </a>
+
+        <div class="searchBarContainer">
+          <form action="#" method="GET">
+            <input type="text" class="searchBar" name="term" placeholder="Search...">
+            <button class="searchButton">
+              <img src="{{ url_for('static', filename='images/icons/search.png') }}">
+            </button>
+          </form>
+        </div>
+
+        <div class="rightIcons">
+          <a href="#">
+            <img class="upload" src="{{ url_for('static', filename='images/icons/upload.png') }}">
+          </a>
+                
+        </div>
+
+      </div>
+
+      <div id="sideNavContainer" style="display:none;">
+
+      </div>
+
+      <div id="mainSectionContainer">
+        <div id="mainContentContainer">
+          <script src=" {{ url_for('static', filename='js/videoPlayerActions.js') }}"></script>
+          <script src=" {{ url_for('static', filename='js/commentActions.js') }}"></script>
+          <div class="watchLeftColumn">
+            <video class='videoPlayer' controls>
+              <source src="{{ url_for('uploads', filename='videos/5bba245a573a3.mp4') }}" type='video/mp4'>
+              Your browser does not support the video tag
+            </video>
+
+            <div class='videoInfo'>
+              <h1>A beatiful woman</h1>
+
+              <div class='bottomSection'>
+                  <span class='viewCount'>1000 views</span>
+                  <div class='controls'>
+                    <button class='likeButton' onclick='$action'>
+                      <img src="{{ url_for('static', filename='images/icons/thumb-up.png') }}">
+                      <!-- <img src="{{ url_for('static', filename='images/icons/thumb-up-active.png') }}"> -->
+                      <span class='text'>10</span>
+                    </button>
+
+                    <button class='$class' onclick='$action'>
+                      <img src="{{ url_for('static', filename='images/icons/thumb-down.png') }}">
+                      <!-- <img src="{{ url_for('static', filename='images/icons/thumb-down-active.png') }}"> -->
+                      <span class='text'>5</span>
+                    </button>
+                  </div>
+              </div>
+            </div>
+
+            <div class='secondaryInfo'>
+              <div class='topRow'>
+                  Max's profile
+
+                  <div class='uploadInfo'>
+                      <span class='owner'>
+                          <a href='#'>
+                              Max
+                          </a>
+                      </span>
+                      <span class='date'>Published on Date</span>
+                  </div>
+                  <!-- edit or subscribe -->
+                  <div class='editVideoButtonContainer'>
+                    <a href='#'>
+                      <button class='edit button'>
+                          <span class='text'>EDIT VIDEO</span>
+                      </button>
+                    </a>
+                  </div>
+
+                  <div class='subscribeButtonContainer'>
+                    <button class='subscribe button' onclick=''>
+                      <span class='text'>SUBSCRIBE</span>
+                    </button>
+                  </div>
+
+              </div>
+
+              <div class='descriptionContainer'>
+                  Awesome!
+              </div>
+            </div>
+
+            <div class='commentSection'>
+
+              <div class='header'>
+                  <span class='commentCount'>1000 Comments</span>
+
+                  <div class='commentForm'>
+                    <a href='#'>
+                      <img src="{{ url_for('static', filename='images/profilePictures/default.png') }}" class='profilePicture'>
+                    </a>
+                    <textarea class='commentBodyClass' placeholder='Add a public comment'></textarea>
+                    <button class='postComment' onclick="postComment(this, 'Max', 1, null, 'comments')">
+                      <span class='text'>COMMENT</span>
+                    </button>
+                  </div>
+              </div>
+
+              <div class='comments'>
+                  <!-- comments -->
+              </div>
+
+            </div>
+          </div>
+
+          <div class="suggestions">
+            <!-- suggestion videos -->
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

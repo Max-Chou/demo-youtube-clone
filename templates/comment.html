@@ -1,0 +1,59 @@
+<div class='itemContainer'>
+  <div class='comment'>
+    <a href='#'>
+      <img src="{{ url_for('static', filename='images/profilePictures/default.png') }}" class='profilePicture'>
+    </a>
+
+      <div class='mainContainer'>
+
+          <div class='commentHeader'>
+              <a href='#'>
+                  <span class='username'>{{ content['postedBy'] }}</span>
+              </a>
+              <span class='timestamp'>posted time</span>
+          </div>
+
+          <div class='body'>
+            {{ content['commentText'] }}
+          </div>
+      </div>
+
+  </div>
+
+  
+
+  <div class='controls'>
+    <button onclick="toggleReply(this)">
+      <span class='text'>REPLY</span>
+    </button>
+
+    <span class='likesCount'>100</span>
+    <button class='likeButton' onclick=''>
+      <img src="{{ url_for('static', filename='images/icons/thumb-up.png') }}">
+      <span class='text'></span>
+    </button>
+    <button class='dislikeButton' onclick=''>
+      <img src="{{ url_for('static', filename='images/icons/thumb-down.png') }}">
+      <span class='text'></span>
+    </button>
+  </div>
+
+  <div class='commentForm hidden'>
+    <a href='#'>
+      <img src="{{ url_for('static', filename='images/profilePictures/default.png') }}" class='profilePicture'>
+    </a>
+    <textarea class='commentBodyClass' placeholder='Add a public comment'></textarea>
+    <button class='cancelComment' onclick='toggleReply(this)'>
+      <span class='text'>Cancel</span>
+    </button>
+    <button class='postComment' onclick="postComment(this, 'Max', 1, null, 'repliesSection')">
+      <span class='text'>Reply</span>
+    </button>
+  </div>
+
+  <!-- reply section
+  <div class='repliesSection'></div>
+  <span class='repliesSection viewReplies' onclick='getReplies($id, this, $videoId)'>
+    View all $numResponses replies</span>
+  -->
+</div>
