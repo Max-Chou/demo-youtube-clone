@@ -69,14 +69,18 @@
 
             <form action='settings.php' method='POST' enctype='multipart/form-data'>
               <span class='title'>User details</span>
+
+              {{ userForm.csrf_token }}
               <div class='form-group'>
-                <input class='form-control' type='text' placeholder='First name' name='firstName' value='' required>
+                {{ userForm.first_name(class='form-control', placeholder=userForm.first_name.label.text) }}
               </div>
+
               <div class='form-group'>
-                <input class='form-control' type='text' placeholder='Last name' name='lastName' value='' required>
+                {{ userForm.last_name(class='form-control', placeholder=userForm.last_name.label.text) }}
               </div>
+
               <div class='form-group'>
-                <input class='form-control' type='email' placeholder='Email' name='email' value='' required>
+                {{ userForm.email(class='form-control', placeholder=userForm.email.label.text) }}
               </div>
               <button type='submit' class='btn btn-primary' name='saveDetailsButton'>Save</button>
             </form>
@@ -90,14 +94,15 @@
 
             <form action='settings.php' method='POST' enctype='multipart/form-data'>
               <span class='title'>Update password</span>
+
               <div class='form-group'>
-                <input class='form-control' type='password' placeholder='Old password' name='$name' required>
+                {{ passwordForm.old_password(class='form-control', placeholder=passwordForm.old_password.label.text) }}
               </div>
               <div class='form-group'>
-                <input class='form-control' type='password' placeholder='New password' name='$name' required>
+                {{ passwordForm.password(class='form-control', placeholder=passwordForm.password.label.text) }}
               </div>
               <div class='form-group'>
-                <input class='form-control' type='password' placeholder='Confirm new password' name='$name' required>
+                {{ passwordForm.password2(class='form-control', placeholder=passwordForm.password2.label.text) }}
               </div>
               <button type='submit' class='btn btn-primary' name='savePasswordButton'>Save</button>
             </form>

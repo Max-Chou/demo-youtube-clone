@@ -24,13 +24,14 @@
 
         <div class="loginForm">
           <form action="signUp.php" method="POST">
-            <input type="text" name="firstName" placeholder="First name" value="" autocomplete="off" required>
-            <input type="text" name="lastName" placeholder="Last name" autocomplete="off" value="" required>
-            <input type="text" name="username" placeholder="Username" autocomplete="off" value="" required>
-            <input type="email" name="email" placeholder="Email" autocomplete="off" value="" required>
-            <input type="email" name="email2" placeholder="Confirm email" autocomplete="off" value="" required>
-            <input type="password" name="password" placeholder="Password" autocomplete="off" required>
-            <input type="password" name="password2" placeholder="Confirm password" autocomplete="off" required>
+            {{ form.csrf_token }}
+            {{ form.first_name(placeholder=form.first_name.label.text, autocomplete="off") }}
+            {{ form.last_name(placeholder=form.last_name.label.text, autocomplete="off") }}
+            {{ form.username(placeholder=form.username.label.text, autocomplete="off") }}
+            {{ form.email(placeholder=form.email.label.text, autocomplete="off") }}
+            {{ form.email2(placeholder=form.email2.label.text, autocomplete="off")}}
+            {{ form.password(autocomplete="off", placeholder=form.password.label.text) }}
+            {{ form.password2(autocomplete="off", placeholder=form.password2.label.text) }}
             <input type="submit" name="submitButton" value="SUBMIT">
           </form>
         </div>

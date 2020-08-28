@@ -59,25 +59,29 @@
         <div id="mainContentContainer">
           <div class="column">
             <form action='#process' method='POST' enctype='multipart/form-data'>
+              {{ form.csrf_token() }}
+
               <div class='form-group'>
-                <label for='exampleFormControlFile1'>Your file</label>
-                <input type='file' class='form-control-file' id='exampleFormControlFile1' name='fileInput' required>
+                {{ form.video.label(id='exampleFormControlFile1') }}
+                {{ form.video(class='form-control-file', id='exampleFormControlFile1') }}
               </div>
+
               <div class='form-group'>
-                <input class='form-control' type='text' placeholder='Title' name='titleInput' value=''>
+                {{ form.title(class='form-control', placeholder=form.title.label.text) }}
               </div>
+
               <div class='form-group'>
-                <textarea class='form-control' placeholder='Description' name='descriptionInput' rows='3'></textarea>
+                {{ form.description(class='form-control', placeholder=form.description.label.text) }}
               </div>
+
               <div class='form-group'>
-                <select class='form-control' name='privacyInput'>
-                    <option value='0' $privateSelected>Private</option>
-                    <option value='1' $publicSelected>Public</option>
-                </select>
+                {{ form.is_private(class='form-control') }}
               </div>
+
               <div class='form-group'>
-                <select class='form-control' name='categoryInput'></select>
+                {{ form.category(class='form-control') }}
               </div>
+
               <button type='submit' class='btn btn-primary' name='saveButton'>Save</button>
             </form>
           </div>
