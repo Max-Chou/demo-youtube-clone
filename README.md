@@ -1,9 +1,21 @@
 # demo-youtube-clone
-Youtube Clone
+Youtube Clone - basic version
+
+**Warning - This app is only for my portfolio, so don't use it for production.**
 
 ## Features
 
-* Upload your videos
+* User Login and Authentication
+
+* Upload vidoes
+
+* Search vidoes
+
+* Subscribe Users (Channels)
+
+* Comments and Replies
+
+* Likes or Dislikes
 
 
 ## Stacks
@@ -17,10 +29,19 @@ Youtube Clone
 * PostgreSQL(pro-db)
 
 
-## 
+## How to improve
+
+The app is just for my portfolio, so I don't consider the performance and security and it cannot be a real Youtube app.
+
+* Cache
+* RabbitMQ or Celery for some asynchronous works
+* Email or SMS services
+* Two-Factor Authentication or OAuth
+* Static Contents on AWS S3 or CDN services
+* Payments 
 
 
-## For Development Only
+## How to Develop 
 
 ### Database Schema
 TODO
@@ -30,7 +51,7 @@ TODO
 TODO
 
 
-## For Deployment Only
+## How to Deploy
 
 ### Server
 TODO

@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block page_content %}
+
+{% if user %}
+<div class='profileContainer'>
+  <div class='coverPhotoContainer'>
+    <img src="{{ url_for('static', filename='images/coverPhotos/default-cover-photo.jpg') }}" class='coverPhoto'>
+    <span class='channelName'>{{ user.first_name }} {{ user.last_name }}</span>
+  </div>
+  <div class='profileHeader'>
+    <div class='userInfoContainer'>
+      <img class='profileImage' src="{{ url_for('static', filename='images/profilePictures/default.png') }}">
+      <div class='userInfo'>
+        <span class='title'>{{ user.first_name }} {{ user.last_name }}</span>
+        <span class='subscriberCount'>0</span>
+      </div>
+    </div>
+
+    <div class='buttonContainer'>
+      <div class='buttonItem'>
+        {% if not current_user.username != user.username %}
+        <div class='subscribeButtonContainer'>
+          <!-- subscribe button -->
+          <button class='subscribe button' onclick=''>
+            <span class='text'>Subscribe</span>
+          </button>
+          <!-- unsubscribe button
+          <button class='unsubscribe button' onclick=''>
+            <span class='text'>Subscribed</span>
+          </button>
+          -->
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <ul class='nav nav-tabs' role='tablist'>
+      <li class='nav-item'>
+        <a class='nav-link active' id='videos-tab' data-toggle='tab' href='#' role='tab' aria-controls='videos' aria-selected='true'>VIDEOS</a>
+      </li>
+      <li class='nav-item'>
+        <a class='nav-link' id='about-tab' data-toggle='tab' href='#about' role='tab' aria-controls='about' aria-selected='false'>ABOUT</a>
+      </li>
+    </ul>
+    <!-- no videos 
+      <span>This user has no videos</span>
+    -->
+
+    <div class='tab-content channelContent'>
+      <div class='tab-pane fade show active' id='videos' role='tabpanel' aria-labelledby='videos-tab'>
+
+        <!-- -->
+        <span>This user has no videos</span>
+        <!-- Grid
+        <div class='videoGridHeader'>
+          <div class='left'>
+
+          </div>
+
+          <div class='right'>
+            <span>Order by:</span>
+            <a href="#">Upload date</a>
+            <a href="#">Most viewed</a>
+          </div>
+        </div>
+        
+        <div class="videoGrid">
+
+        </div>
+        -->
+      </div>
+      <div class='tab-pane fade' id='about' role='tabpanel' aria-labelledby='about-tab'>
+          <div class='section'>
+            <div class='title'>
+              <span>Details</span>
+            </div>
+            <div class='values'>
+              <!-- User Details -->
+            </div>
+          </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% else %}
+<h1>User does not exist</h1>
+{% endif %}
+{% endblock %}
