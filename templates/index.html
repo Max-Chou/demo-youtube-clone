@@ -36,18 +36,22 @@
         </div>
 
         <div class="rightIcons">
+          {% if current_user.is_authenticated %}
           <a href="{{ url_for('upload') }}">
             <img class="upload" src="{{ url_for('static', filename='images/icons/upload.png') }}">
           </a>
-          <!-- login user
-          <a href="{{ url_for('profile') }}">
+          <a href="{{ url_for('profile', username=current_user.username) }}">
             <img src="{{ url_for('static', filename='images/profilePictures/default.png') }}" class='profilePicture'>
           </a>
-          -->
-          <!-- anonymous user -->
+          <a href="{{ url_for('logout') }}">
+            <span class='signInLink'>Log Out</span>
+          </a>
+
+          {% else %}
           <a href="{{ url_for('signin') }}">
             <span class='signInLink'>SIGN IN</span>
           </a>
+          {% endif %}
         </div>
       </div>
 
@@ -57,6 +61,9 @@
 
       <div id="mainSectionContainer">
         <div id="mainContentContainer">
+          <div class="message">
+            
+          </div>
         </div>
       </div>
     </div>

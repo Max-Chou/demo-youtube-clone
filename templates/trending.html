@@ -36,18 +36,18 @@
         </div>
 
         <div class="rightIcons">
+          {% if current_user.is_authenticated %}
           <a href="{{ url_for('upload') }}">
             <img class="upload" src="{{ url_for('static', filename='images/icons/upload.png') }}">
           </a>
-        </div>
-        <!--
           <a href="{{ url_for('profile') }}">
             <img src="{{ url_for('static', filename='images/profilePictures/default.png') }}" class='profilePicture'>
           </a>
-          -->
-        <a href="{{ url_for('signin') }}">
-          <span class='signInLink'>SIGN IN</span>
-        </a>
+          {% else %}
+          <a href="{{ url_for('signin') }}">
+            <span class='signInLink'>SIGN IN</span>
+          </a>
+          {% endif %}
       </div>
 
       <div id="sideNavContainer" style="display:none;">

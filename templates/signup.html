@@ -23,7 +23,7 @@
         </div>
 
         <div class="loginForm">
-          <form action="signUp.php" method="POST">
+          <form action="{{ url_for('signup') }}" method="POST">
             {{ form.csrf_token }}
             {{ form.first_name(placeholder=form.first_name.label.text, autocomplete="off") }}
             {{ form.last_name(placeholder=form.last_name.label.text, autocomplete="off") }}

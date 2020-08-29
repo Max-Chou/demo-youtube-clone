@@ -36,17 +36,18 @@
         </div>
 
         <div class="rightIcons">
+          {% if current_user.is_authenticated %}
           <a href="{{ url_for('upload') }}">
             <img class="upload" src="{{ url_for('static', filename='images/icons/upload.png') }}">
           </a>
-          <!--
-          <a href="{{ url_for('profile') }}">
+          <a href="{{ url_for('profile', username=current_user.username) }}">
             <img src="{{ url_for('static', filename='images/profilePictures/default.png') }}" class='profilePicture'>
           </a>
-          -->
+          {% else %}
           <a href="{{ url_for('signin') }}">
             <span class='signInLink'>SIGN IN</span>
           </a>
+          {% endif %}
         </div>
 
       </div>
@@ -91,9 +92,6 @@
               $("#loadingModal").modal("show");
             });
           </script>
-        
-        
-        
           <div class="modal fade" id="loadingModal" tabindex="-1" role="dialog" aria-labelledby="loadingModal" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
@@ -105,8 +103,6 @@
               </div>
             </div>
           </div>
-        
-
         </div>
       </div>
     </div>
