@@ -5,6 +5,14 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 
 # models
+class Subscription(db.Model):
+    __tablename__ = 'subscriptions'
+
+    subscribed_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+    subscriber_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     
@@ -18,7 +26,26 @@ class User(UserMixin, db.Model):
     #file_path = db.Column(db.String(255))
 
     videos = db.relationship('Video', backref='user', lazy='dynamic')
+    like_videos = db.relationship('LikeVideo', backref='user', lazy='dynamic')
+    dislike_videos = db.relationship('DislikeVideo', backref='user', lazy='dynamic')
+    like_comments = db.relationship('LikeComment', backref='user', lazy='dynamic')
+    dislike_comments = db.relationship('DislikeComment', backref='user', lazy='dynamic')
 
+
+    subscribed_by = db.relationship(
+        'Subscription',
+        foreign_keys=[Subscription.subscriber_id],
+        backref=db.backref('subscriber', lazy='joined'),
+        lazy='dynamic',
+        cascade='all, delete-orphan'
+    )
+    subscribers = db.relationship(
+        'Subscription',
+        foreign_keys=[Subscription.subscribed_id],
+        backref=db.backref('subscribed', lazy='joined'),
+        lazy='dynamic',
+        cascade='all, delete-orphan'
+    )
 
     @property
     def password(self):
@@ -54,6 +81,10 @@ class Video(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     thumbnails = db.relationship('Thumbnail', backref='video', lazy='dynamic')
+    liked_by = db.relationship('LikeVideo', backref='video', lazy='dynamic')
+    disliked_by = db.relationship('DislikeVideo', backref='video', lazy='dynamic')
+    comments = db.relationship('Comment', backref='video', lazy='dynamic')
+
 
     # very easy way to increase views
     def increment_views(self):
@@ -123,15 +154,7 @@ class Comment(db.Model):
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     video_id = db.Column(db.Integer, db.ForeignKey('videos.id'))
-    comment_id = db.Column(db.Integer, db.ForeignKey('comments.id'))
-
-
-class Subscription(db.Model):
-    __tablename__ = 'subscriptions'
-
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
-    subscriber_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    reply_id = db.Column(db.Integer, db.ForeignKey('comments.id'))
 
 
 class LikeVideo(db.Model):

@@ -1,11 +1,11 @@
-function postComment(button, postedBy, videoId, replyTo, containerClass) {
+function postComment(button, userId, videoId, replyTo, containerClass) {
     var textarea = $(button).siblings("textarea");
     var commentText = textarea.val();
     textarea.val("");
 
     if(commentText) {
 
-        $.post("/postComment", { commentText: commentText, postedBy: postedBy, 
+        $.post("/postComment", { commentText: commentText, userId: userId, 
             videoId: videoId, responseTo: replyTo })
         .done(function(comment){
             

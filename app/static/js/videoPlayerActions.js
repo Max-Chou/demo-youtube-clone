@@ -1,5 +1,5 @@
 function likeVideo(button, videoId) {
-    $.post("ajax/likeVideo.php", {videoId: videoId})
+    $.post("/likeVideo", {videoId: videoId})
     .done(function(data) {
         
         var likeButton = $(button);
@@ -8,24 +8,24 @@ function likeVideo(button, videoId) {
         likeButton.addClass("active");
         dislikeButton.removeClass("active");
 
-        var result = JSON.parse(data);
+        var result = data;
         updateLikesValue(likeButton.find(".text"), result.likes);
         updateLikesValue(dislikeButton.find(".text"), result.dislikes);
 
         if(result.likes < 0) {
             likeButton.removeClass("active");
-            likeButton.find("img:first").attr("src", "assets/images/icons/thumb-up.png");
+            likeButton.find("img:first").attr("src", "/static/images/icons/thumb-up.png");
         }
         else {
-            likeButton.find("img:first").attr("src", "assets/images/icons/thumb-up-active.png")
+            likeButton.find("img:first").attr("src", "/static/images/icons/thumb-up-active.png")
         }
 
-        dislikeButton.find("img:first").attr("src", "assets/images/icons/thumb-down.png");
+        dislikeButton.find("img:first").attr("src", "/static/images/icons/thumb-down.png");
     });
 }
 
 function dislikeVideo(button, videoId) {
-    $.post("ajax/dislikeVideo.php", {videoId: videoId})
+    $.post("/dislikeVideo", {videoId: videoId})
     .done(function(data) {
         
         var dislikeButton = $(button);
@@ -34,19 +34,19 @@ function dislikeVideo(button, videoId) {
         dislikeButton.addClass("active");
         likeButton.removeClass("active");
 
-        var result = JSON.parse(data);
+        var result = data;
         updateLikesValue(likeButton.find(".text"), result.likes);
         updateLikesValue(dislikeButton.find(".text"), result.dislikes);
 
         if(result.dislikes < 0) {
             dislikeButton.removeClass("active");
-            dislikeButton.find("img:first").attr("src", "assets/images/icons/thumb-down.png");
+            dislikeButton.find("img:first").attr("src", "/static/images/icons/thumb-down.png");
         }
         else {
-            dislikeButton.find("img:first").attr("src", "assets/images/icons/thumb-down-active.png")
+            dislikeButton.find("img:first").attr("src", "/static/images/icons/thumb-down-active.png")
         }
 
-        likeButton.find("img:first").attr("src", "assets/images/icons/thumb-up.png");
+        likeButton.find("img:first").attr("src", "/static/images/icons/thumb-up.png");
     });
 }
 

@@ -4,7 +4,7 @@ from math import floor
 from ..extensions import db, login_manager
 from . import auth
 from flask import render_template, redirect, url_for, send_from_directory, jsonify, request, current_app, flash
-from ..models import User, Video, Category, Thumbnail
+from ..models import User, Video, Category, Thumbnail, LikeVideo, DislikeVideo
 from ..utils import allowed_file
 from .forms import VideoForm, UserUpdateForm, SigninForm, SignupForm, PasswordUpdateForm
 from flask_login import login_required, current_user, logout_user, login_user
