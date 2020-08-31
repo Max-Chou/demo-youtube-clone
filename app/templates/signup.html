@@ -22,6 +22,13 @@
           <span>to continue to VideoTube</span>
         </div>
 
+        {% for message in get_flashed_messages() %}
+        <div class="alert alert-warning">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          {{ message }}
+        </div>
+        {% endfor %}
+
         <div class="loginForm">
           <form action="{{ url_for('auth.signup') }}" method="POST">
             {{ form.csrf_token }}

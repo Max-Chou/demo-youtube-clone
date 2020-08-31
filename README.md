@@ -44,7 +44,7 @@ The app is just for my portfolio, so I don't consider the performance and securi
 ## How to Develop 
 
 ### Database Schema
-TODO
+![Database Schema](/schema.png)
 
 ### Rest API
 

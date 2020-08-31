@@ -5,15 +5,15 @@
 <script src=" {{ url_for('static', filename='js/commentActions.js') }}"></script>
 <div class="watchLeftColumn">
   <video class='videoPlayer' controls>
-    <source src="{{ url_for('uploads', filename='videos/5bba245a573a3.mp4') }}" type='video/mp4'>
+    <source src="{{ video.file_url }}" type='video/mp4'>
     Your browser does not support the video tag
   </video>
 
   <div class='videoInfo'>
-    <h1>A beatiful woman</h1>
+    <h1>{{ video.title }}</h1>
 
     <div class='bottomSection'>
-        <span class='viewCount'>1000 views</span>
+        <span class='viewCount'>{{ video.num_views }} views</span>
         <div class='controls'>
           <button class='likeButton' onclick='$action'>
             <img src="{{ url_for('static', filename='images/icons/thumb-up.png') }}">
@@ -32,17 +32,20 @@
 
   <div class='secondaryInfo'>
     <div class='topRow'>
-        Max's profile
+      <a href="{{ url_for('page.profile', username=video.user.username) }}">
+        <img src="{{ url_for('static', filename='images/profilePictures/default.png') }}" class='profilePicture'>
+      </a>
 
-        <div class='uploadInfo'>
-            <span class='owner'>
-                <a href='#'>
-                    Max
-                </a>
-            </span>
-            <span class='date'>Published on Date</span>
-        </div>
+      <div class='uploadInfo'>
+        <span class='owner'>
+          <a href='#'>
+          {{ video.user.username }}
+          </a>
+        </span>
+        <span class='date'>Published on Date</span>
+      </div>
         <!-- edit or subscribe -->
+        {% if current_user.username == video.user.username %}
         <div class='editVideoButtonContainer'>
           <a href='#'>
             <button class='edit button'>
@@ -50,17 +53,17 @@
             </button>
           </a>
         </div>
-
+        {% else %}
         <div class='subscribeButtonContainer'>
           <button class='subscribe button' onclick=''>
             <span class='text'>SUBSCRIBE</span>
           </button>
         </div>
-
+        {% endif %}
     </div>
 
     <div class='descriptionContainer'>
-        Awesome!
+        {{ video.description }}
     </div>
   </div>
 

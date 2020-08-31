@@ -19,7 +19,7 @@
 
     <div class='buttonContainer'>
       <div class='buttonItem'>
-        {% if not current_user.username != user.username %}
+        {% if current_user.username != user.username %}
         <div class='subscribeButtonContainer'>
           <!-- subscribe button -->
           <button class='subscribe button' onclick=''>
@@ -37,7 +37,7 @@
 
     <ul class='nav nav-tabs' role='tablist'>
       <li class='nav-item'>
-        <a class='nav-link active' id='videos-tab' data-toggle='tab' href='#' role='tab' aria-controls='videos' aria-selected='true'>VIDEOS</a>
+        <a class='nav-link active' id='videos-tab' data-toggle='tab' href='#videos' role='tab' aria-controls='videos' aria-selected='true'>VIDEOS</a>
       </li>
       <li class='nav-item'>
         <a class='nav-link' id='about-tab' data-toggle='tab' href='#about' role='tab' aria-controls='about' aria-selected='false'>ABOUT</a>
@@ -49,26 +49,34 @@
 
     <div class='tab-content channelContent'>
       <div class='tab-pane fade show active' id='videos' role='tabpanel' aria-labelledby='videos-tab'>
-
-        <!-- -->
-        <span>This user has no videos</span>
-        <!-- Grid
-        <div class='videoGridHeader'>
-          <div class='left'>
-
-          </div>
-
-          <div class='right'>
-            <span>Order by:</span>
-            <a href="#">Upload date</a>
-            <a href="#">Most viewed</a>
-          </div>
-        </div>
+        {% if videos %}
         
+        {% for video in videos %}
         <div class="videoGrid">
-
+          <a href="{{ url_for('page.watch', id=video.id) }}">
+            <div class="videoGridItem">
+              <div class='thumbnail'>
+                <img src="{{ video.thumbnails.first().file_url }}">
+                <div class='duration'>
+                    <span>{{ video.duration }}</span>
+                </div>
+              </div>
+              <div class='details'>
+                <h3 class='title'>{{ video.title }}</h3>
+                <span class='username'>{{ video.user.username }}</span>
+                <div class='stats'>
+                    <span class='viewCount'>{{ video.num_views }} views</span>
+                    <span class='timeStamp'>{{ video.created_at }}</span>
+                </div>
+                {{ video.description }}
+              </div>
+            </div>
+          </a>
         </div>
-        -->
+        {% endfor %}
+        {% else %}
+        <span>This user has no videos</span>
+        {% endif %}
       </div>
       <div class='tab-pane fade' id='about' role='tabpanel' aria-labelledby='about-tab'>
           <div class='section'>
@@ -76,7 +84,11 @@
               <span>Details</span>
             </div>
             <div class='values'>
-              <!-- User Details -->
+              <span>Name: {{ user.first_name }} {{ user.last_name }}</span>
+              <span>Username: {{ user.username }} </span>
+              <span>Subscribers: 0</span>
+              <span>Total views: 0</span>
+              <span>Sign up date: {{ user.created_at }}</span>
             </div>
           </div>
       </div>

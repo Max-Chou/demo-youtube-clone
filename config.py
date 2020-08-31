@@ -4,7 +4,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
 
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev_secretkey'
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'e7f7d5db0e0f4e068da84d44b38cb2f7'
 
     UPLOAD_DIR = os.environ.get('UPLOAD_DIR') or os.path.join(basedir, 'uploads')
     UPLOAD_VIDEO_DIR = os.environ.get('UPLOAD_VIDEO_DIR') or os.path.join(basedir, 'uploads', 'videos')
@@ -14,7 +14,8 @@ class Config:
     FFMPEG_PATH = os.path.join(basedir, 'ffmpeg')
     FFPROBE_PATH = os.path.join(basedir, 'ffprobe')
 
-    ALLOWED_VIDEOS = {"mp4", "flv", "webm", "mkv", "vob", "ogv", "ogg", "avi", "wmv", "mov", "mpeg", "mpg"}
+    #ALLOWED_VIDEOS = {"mp4", "flv", "webm", "mkv", "vob", "ogv", "ogg", "avi", "wmv", "mov", "mpeg", "mpg"}
+    ALLOWED_VIDEOS = {"mp4"}
     # ALLOWED_IMAGES = 
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
@@ -25,7 +26,6 @@ class Config:
 
 
 class DevelopmentConfig(Config):
-    #SERVER_NAME = 'localhost.localhost:5000'
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')

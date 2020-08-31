@@ -53,6 +53,17 @@ class Video(db.Model):
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
+    thumbnails = db.relationship('Thumbnail', backref='video', lazy='dynamic')
+
+    # very easy way to increase views
+    def increment_views(self):
+        self.num_views += 1
+
+        db.session.add(self)
+        db.session.commit()
+
+        return None
+
 
 class Category(db.Model):
     __tablename__ = 'categories'
@@ -63,6 +74,33 @@ class Category(db.Model):
 
     videos = db.relationship('Video', backref='category', lazy='dynamic')
 
+    @staticmethod
+    def insert_category():
+        categories = [
+            'Film & Animation',
+            'Autos & Vehicles',
+            'Music',
+            'Pets & Animals',
+            'Sports',
+            'Travel & Events',
+            'Gaming',
+            'People & Blogs',
+            'Comedy',
+            'Entertainment',
+            'News & Politics',
+            'Howto & Style',
+            'Education',
+            'Science & Technology',
+            'Nonprofits & Activism',
+        ]
+        for c in categories:
+            category = Category.query.filter_by(name=c).first()
+            if category is None:
+                category = Category(name=c)
+            db.session.add(category)
+        
+        db.session.commit()
+
 
 class Thumbnail(db.Model):
     __tablename__ = 'thumbnails'
@@ -72,6 +110,8 @@ class Thumbnail(db.Model):
     file_url = db.Column(db.String(255), nullable=False, unique=True)
     is_used = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    video_id = db.Column(db.Integer, db.ForeignKey('videos.id'))
 
 
 class Comment(db.Model):

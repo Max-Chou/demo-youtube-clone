@@ -23,6 +23,16 @@
           <span>to continue to VideoTube</span>
         </div>
 
+        
+        <!-- flash message -->
+        {% for message in get_flashed_messages() %}
+        <div class="alert alert-warning">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          {{ message }}
+        </div>
+        {% endfor %}
+        
+
         <div class="loginForm">
 
           <form action="{{ url_for('auth.signin') }}" method="POST">

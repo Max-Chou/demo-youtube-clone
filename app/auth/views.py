@@ -3,8 +3,8 @@ import subprocess
 from math import floor
 from ..extensions import db, login_manager
 from . import auth
-from flask import render_template, redirect, url_for, send_from_directory, jsonify, request, current_app
-from ..models import User, Video, Category
+from flask import render_template, redirect, url_for, send_from_directory, jsonify, request, current_app, flash
+from ..models import User, Video, Category, Thumbnail
 from ..utils import allowed_file
 from .forms import VideoForm, UserUpdateForm, SigninForm, SignupForm, PasswordUpdateForm
 from flask_login import login_required, current_user, logout_user, login_user
@@ -24,6 +24,8 @@ def signin():
                 next = url_for('page.index')
             return redirect(next)
 
+        flash('Invalid email or password.')
+
     return render_template('signin.html', form=form)
 
 
@@ -42,7 +44,7 @@ def signup():
 
         db.session.add(user)
         db.session.commit()
-    
+        flash('You have signed up your account. Thanks!')
         return redirect(url_for('page.index'))
     return render_template('signup.html', form=form)
 
@@ -74,25 +76,6 @@ def upload():
     
     items = Category.query.all()
     category = [(item.id, item.name) for item in items]
-
-    # only for test
-    #category = [
-    #    (1, 'Film & Animation'),
-    #    (2, 'Autos & Vehicles'),
-    #    (3, 'Music'),
-    #    (4, 'Pets & Animals'),
-    #    (5, 'Sports'),
-    #    (6, 'Travel & Events'),
-    #    (7, 'Gaming'),
-    #    (8, 'People & Blogs'),
-    #    (9, 'Comedy'),
-    #    (10, 'Entertainment'),
-    #    (11, 'News & Politics'),
-    #    (12, 'Howto & Style'),
-    #    (13, 'Education'),
-    #    (14, 'Science & Technology'),
-    #    (15, 'Nonprofits & Activism')
-    #]
     form.category.choices = category
 
     if form.validate_on_submit():
@@ -107,20 +90,24 @@ def upload():
         
         # process video
         if form.video.data and allowed_file(form.video.data.filename, current_app.config['ALLOWED_VIDEOS']):
-            tempFilename = uuid4().hex # create unique filename
-            tempPath = os.path.join(current_app.config['UPLOAD_VIDEO_DIR'], tempFilename)
 
-            form.video.data.save(tempPath)
+            # You can only upload mp4!!!!
+
+            #tempFilename = uuid4().hex # create unique filename
+            #tempPath = os.path.join(current_app.config['UPLOAD_VIDEO_DIR'], tempFilename)
+
+            #form.video.data.save(tempPath)
 
             filename = uuid4().hex + '.mp4'
             finalPath = os.path.join(current_app.config['UPLOAD_VIDEO_DIR'], filename)
+            form.video.data.save(finalPath)
 
             # transform videos to mp4
-            cmd = "{} -i {} {}".format(current_app.config['FFMPEG_PATH'], tempPath, finalPath)
-            output = subprocess.run(cmd, shell=True)
+            #cmd = "{} -i {} {}".format(current_app.config['FFMPEG_PATH'], tempPath, finalPath)
+            #output = subprocess.run(cmd, shell=True)
 
             # remove temp file
-            os.remove(tempPath)
+            #os.remove(tempPath)
 
             # get the duration
             cmd = "{} -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 {}".format(current_app.config['FFPROBE_PATH'], finalPath)
@@ -135,13 +122,32 @@ def upload():
 
             duration = timedelta(hours=hours, minutes=mins, seconds=secs)
 
+
+            # create thumbnails (config)
+            thumbnailFilename = uuid4().hex + '.jpg'
+            thumbnailPath = os.path.join(current_app.config['UPLOAD_THUMBNAIL_DIR'], thumbnailFilename)
+            interval = round(duration_secs * 0.4)
+            thumbnailSize = "210x118"
+
+            cmd = "{} -i {} -ss {} -s {} -vframes 1 {}".format(current_app.config['FFMPEG_PATH'], finalPath, interval, thumbnailSize, thumbnailPath)
+            output = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE)
+
             video.duration = duration
             video.file_path = finalPath
             video.file_url = url_for('page.uploads', filepath=f'videos/{filename}')
+            db.session.add(video)
+            db.session.commit()
 
-        db.session.add(video)
-        db.session.commit()
+            thumbnail = Thumbnail(
+                file_path=thumbnailPath,
+                file_url=url_for('page.uploads', filepath=f'thumbnails/{thumbnailFilename}'),
+                is_used=True,
+                video=video,
+            )
+            db.session.add(thumbnail)
+            db.session.commit()
 
+        flash('A new video has been uploaded.')
         return redirect(url_for('page.index'))
 
     return render_template('upload.html', form=form)

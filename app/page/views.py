@@ -27,9 +27,12 @@ def profile(username):
     return render_template('profile.html', user=user, videos=videos)
 
 
-@page.route('/watch')
-def watch():
-    return render_template('watch.html')
+@page.route('/watch/<int:id>')
+def watch(id):
+    video = Video.query.get(id)
+    video.increment_views()
+    
+    return render_template('watch.html', video=video)
 
 
 @page.route('/trending')

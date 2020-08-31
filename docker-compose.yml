@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  faketube:
+    build: .
+    ports:
+      - "8000:5000"
+    env_file: .env
+    command: >
+      gunicorn -b 0.0.0.0:5000 -w 3 --access-logfile - --error-logfile - --reload faketube:app
+    volumes:
+      - ".:/app"
+  
+  dev-db:
+    image: "postgres:12.3"
+    env_file: .env
+    volumes: 
+      - "dev-db:/var/lib/postgresql/data"
+
+
+volumes:
+  dev-db:
