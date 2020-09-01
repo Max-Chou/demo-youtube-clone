@@ -32,7 +32,7 @@ function toggleReply(button) {
 }
 
 function likeComment(commentId, button, videoId) {
-    $.post("ajax/likeComment.php", { commentId: commentId, videoId: videoId })
+    $.post("/likeComment", { commentId: commentId, videoId: videoId })
     .done(function(numToChange) {
         
         var likeButton = $(button);
@@ -46,18 +46,18 @@ function likeComment(commentId, button, videoId) {
 
         if(numToChange < 0) {
             likeButton.removeClass("active");
-            likeButton.find("img:first").attr("src", "assets/images/icons/thumb-up.png");
+            likeButton.find("img:first").attr("src", "/static/images/icons/thumb-up.png");
         }
         else {
-            likeButton.find("img:first").attr("src", "assets/images/icons/thumb-up-active.png")
+            likeButton.find("img:first").attr("src", "/static/images/icons/thumb-up-active.png")
         }
 
-        dislikeButton.find("img:first").attr("src", "assets/images/icons/thumb-down.png");
+        dislikeButton.find("img:first").attr("src", "/static/images/icons/thumb-down.png");
     });
 }
 
 function dislikeComment(commentId, button, videoId) {
-    $.post("ajax/dislikeComment.php", { commentId: commentId, videoId: videoId })
+    $.post("/dislikeComment", { commentId: commentId, videoId: videoId })
     .done(function(numToChange) {
         
         var dislikeButton = $(button);
@@ -71,13 +71,13 @@ function dislikeComment(commentId, button, videoId) {
 
         if(numToChange > 0) {
             dislikeButton.removeClass("active");
-            dislikeButton.find("img:first").attr("src", "assets/images/icons/thumb-down.png");
+            dislikeButton.find("img:first").attr("src", "/static/images/icons/thumb-down.png");
         }
         else {
-            dislikeButton.find("img:first").attr("src", "assets/images/icons/thumb-down-active.png")
+            dislikeButton.find("img:first").attr("src", "/static/images/icons/thumb-down-active.png")
         }
 
-        likeButton.find("img:first").attr("src", "assets/images/icons/thumb-up.png");
+        likeButton.find("img:first").attr("src", "/static/images/icons/thumb-up.png");
     });
 }
 
@@ -87,7 +87,7 @@ function updateLikesValue(element, num) {
 }
 
 function getReplies(commentId, button, videoId) {
-    $.post("ajax/getCommentReplies.php", { commentId: commentId, videoId: videoId })
+    $.post("/getCommentReplies", { commentId: commentId, videoId: videoId })
     .done(function(comments) {
         var replies = $("<div>").addClass("repliesSection");
         replies.append(comments);

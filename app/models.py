@@ -30,7 +30,7 @@ class User(UserMixin, db.Model):
     dislike_videos = db.relationship('DislikeVideo', backref='user', lazy='dynamic')
     like_comments = db.relationship('LikeComment', backref='user', lazy='dynamic')
     dislike_comments = db.relationship('DislikeComment', backref='user', lazy='dynamic')
-
+    comments = db.relationship('Comment', backref='user', lazy='dynamic')
 
     subscribed_by = db.relationship(
         'Subscription',
@@ -155,6 +155,10 @@ class Comment(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     video_id = db.Column(db.Integer, db.ForeignKey('videos.id'))
     reply_id = db.Column(db.Integer, db.ForeignKey('comments.id'))
+
+
+    liked_by = db.relationship('LikeComment', backref='comment', lazy='dynamic')
+    disliked_by = db.relationship('DislikeComment', backref='comment', lazy='dynamic')
 
 
 class LikeVideo(db.Model):

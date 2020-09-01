@@ -1,0 +1,62 @@
+{% for reply in replies %}
+<div class='itemContainer'>
+  <div class='comment'>
+          
+    <a href="{{ url_for('page.profile', username=reply.user.username) }}">
+      <img src="{{ url_for('static', filename='images/profilePictures/default.png') }}" class='profilePicture'>
+    </a>
+
+    <div class='mainContainer'>
+
+      <div class='commentHeader'>
+        <a href="{{ url_for('page.profile', username=reply.user.username) }}">
+          <span class='username'>{{ reply.user.username }}</span>
+        </a>
+        <span class='timestamp'>{{ reply.created_at }}</span>
+      </div>
+
+      <div class='body'>
+        {{ reply.body }}
+      </div>
+    </div>
+
+  </div>
+  {% if current_user.is_authenticated %}
+  <div class='controls'>
+    <button onclick="toggleReply(this)">
+      <span class='text'>REPLY</span>
+    </button>
+      
+    <span class='likesCount'>{{ reply.liked_by.count() - reply.disliked_by.count() }}</span>
+    <button class='likeButton' onclick="likeComment({{ reply.id }}, this, {{ reply.video_id }})">
+      {% if reply.liked_by.filter_by(user_id=current_user.id).first() %}
+      <img src="{{ url_for('static', filename='images/icons/thumb-up-active.png') }}">
+      {% else %}
+      <img src="{{ url_for('static', filename='images/icons/thumb-up.png') }}">
+      {% endif %}
+      <span class='text'></span>
+    </button>
+    <button class='dislikeButton' onclick="dislikeComment({{ reply.id }}, this, {{ reply.video_id }})">
+      {% if reply.disliked_by.filter_by(user_id=current_user.id).first() %}
+      <img src="{{ url_for('static', filename='images/icons/thumb-down-active.png') }}">
+      {% else %}
+      <img src="{{ url_for('static', filename='images/icons/thumb-down.png') }}">
+      {% endif %}
+      <span class='text'></span>
+    </button>
+  </div>
+      
+  <div class='commentForm hidden'>
+    <a href="{{ url_for('page.profile', username=current_user.username) }}">
+      <img src="{{ url_for('static', filename='images/profilePictures/default.png') }}" class='profilePicture'>
+    </a>
+    <textarea class='commentBodyClass' placeholder='Add a public comment'></textarea>
+      <button class='cancelComment' onclick='toggleReply(this)'>
+      <span class='text'>Cancel</span>
+    </button>
+    <button class='postComment' onclick="postComment(this, {{ current_user.id }}, {{ reply.video_id }}, {{ reply.reply_id }}, 'repliesSection')">
+      <span class='text'>Reply</span>
+    </button>
+  </div>
+  {% endif %}
+{% endfor %}

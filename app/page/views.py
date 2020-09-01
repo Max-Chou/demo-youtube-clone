@@ -3,9 +3,9 @@ import subprocess
 from math import floor
 from . import page
 from ..extensions import db
-from flask import render_template, redirect, url_for, send_from_directory, jsonify, request, current_app
+from flask import render_template, redirect, url_for, send_from_directory, jsonify, request, current_app, abort
 from flask_login import login_required, current_user
-from ..models import User, Video, Category, LikeVideo, DislikeVideo
+from ..models import User, Video, Category, LikeVideo, DislikeVideo, Comment, LikeComment, DislikeComment
 
 
 @page.route('/')
@@ -19,9 +19,18 @@ def search():
 
 
 @page.route('/profile/<username>')
-def profile(username):
+@page.route('/profile/<int:id>')
+def profile(username=None, id=None):
 
-    user = User.query.filter_by(username=username).first()
+    user = None
+    if username:
+        user = User.query.filter_by(username=username).first()
+
+    if id:
+        user = User.query.get(id)
+
+    if not user:
+        abort(404)
 
     videos = user.videos.order_by(Video.created_at).all()
 
@@ -33,7 +42,10 @@ def watch(id):
     video = Video.query.get(id)
     video.increment_views()
 
-    return render_template('watch.html', video=video)
+    comments = video.comments.filter(Comment.reply_id == None).order_by(Comment.created_at.desc())
+    replies = video.comments.filter(Comment.reply_id != None)
+
+    return render_template('watch.html', video=video, comments=comments, replies=replies)
 
 
 @page.route('/trending')
@@ -59,8 +71,30 @@ def uploads(filepath):
 # ajax
 @page.route('/postComment', methods=['POST'])
 def postComment():
-    return render_template('comment.html', content=request.form)
 
+    comment = Comment(
+        body=request.form['commentText'],
+        user_id=request.form['userId'],
+        video_id=request.form['videoId']
+    )
+
+    if request.form.get('responseTo'):
+        comment.reply_id = request.form.get('responseTo')
+
+    db.session.add(comment)
+    db.session.commit()
+
+    video = Video.query.get(request.form['videoId'])
+    replies = video.comments.filter(Comment.reply_id != None)
+
+    return render_template('comment.html', comment=comment, replies=replies)
+
+
+@page.route('/getCommentReplies', methods=['POST'])
+def getCommentReplies():
+    replies = Comment.query.filter_by(video_id=request.form['videoId'], reply_id=request.form['commentId'])
+
+    return render_template('reply.html', replies=replies)
 
 @page.route('/likeVideo', methods=['POST'])
 @login_required
@@ -138,3 +172,71 @@ def dislikeVideo():
         }
 
     return jsonify(result)
+
+@page.route('/likeComment', methods=['POST'])
+@login_required
+def likeComment():
+
+    comment_id = request.form['commentId']
+    video_id = request.form['videoId']
+
+    comment = Comment.query.filter_by(id=comment_id, video_id=video_id).first()
+    user = comment.liked_by.filter_by(user_id=current_user.id).first()
+    if user:
+        like = LikeComment.query.filter_by(user_id=current_user.id, comment_id=comment.id).first()
+        db.session.delete(like)
+        db.session.commit()
+        
+        return str(-1)
+    else:
+        dislike = DislikeComment.query.filter_by(user_id=current_user.id, comment_id=comment.id).first()
+        if dislike:
+            count = 1
+            db.session.delete(dislike)
+            db.session.commit()
+        else:
+            count = 0
+
+        like = LikeComment(
+            comment_id=comment.id,
+            user_id=current_user.id,
+        )
+        db.session.add(like)
+        db.session.commit()
+        
+        return str(1 + count)
+
+
+@page.route('/dislikeComment', methods=['POST'])
+@login_required
+def dislikeComment():
+
+    comment_id = request.form['commentId']
+    video_id = request.form['videoId']
+
+    comment = Comment.query.filter_by(id=comment_id, video_id=video_id).first()
+    user = comment.disliked_by.filter_by(user_id=current_user.id).first()
+    if user:
+        dislike = DislikeComment.query.filter_by(user_id=current_user.id, comment_id=comment.id).first()
+        db.session.delete(dislike)
+        db.session.commit()
+
+        return str(1)
+    else:
+        like = DislikeComment.query.filter_by(user_id=current_user.id, comment_id=comment.id).first()
+        if like:
+            count = 1
+            db.session.delete(like)
+            db.session.commit()
+        else:
+            count = 0
+
+
+        dislike = DislikeComment(
+            comment_id=comment_id,
+            user_id=current_user.id,
+        )
+        db.session.add(dislike)
+        db.session.commit()
+
+        return str(-1 - count)

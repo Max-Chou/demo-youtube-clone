@@ -34,7 +34,7 @@ Youtube Clone - basic version
 The app is just for my portfolio, so I don't consider the performance and security and it cannot be a real Youtube app.
 
 * Cache
-* RabbitMQ or Celery for some asynchronous works
+* Celery for some asynchronous works
 * Email or SMS services
 * Two-Factor Authentication or OAuth
 * Static Contents on AWS S3 or CDN services
