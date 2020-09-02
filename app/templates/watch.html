@@ -64,18 +64,24 @@
         {% if current_user.is_authenticated %}
         {% if current_user.username == video.user.username %}
         <div class='editVideoButtonContainer'>
-          <a href='#'>
+          <a href="{{ url_for('auth.editVideo', id=video.id) }}">
             <button class='edit button'>
                 <span class='text'>EDIT VIDEO</span>
             </button>
           </a>
         </div>
         {% else %}
+
         <div class='subscribeButtonContainer'>
-          <button class='subscribe button' onclick=''>
-            <span class='text'>SUBSCRIBE</span>
+          {% if video.user.subscribers.filter_by(subscriber_id=current_user.id).first() %}
+          <button class='unsubscribe button' onclick="subscribe({{ video.user.id }}, {{ current_user.id }}, this)">
+            <span class='text'>Subscribed {{ video.user.subscribers.count() }}</span>
           </button>
-        </div>
+          {% else %}
+          <button class='subscribe button' onclick="subscribe({{ video.user.id }}, {{ current_user.id }}, this)">
+            <span class='text'>Subscribe {{ video.user.subscribers.count() }}</span>
+          </button>
+          {% endif %}
         {% endif %}
         {% endif %}
     </div>

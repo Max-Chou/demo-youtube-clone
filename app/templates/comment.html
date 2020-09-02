@@ -28,7 +28,7 @@
     </button>
 
     <span class='likesCount'>{{ comment.liked_by.count() - comment.disliked_by.count() }}</span>
-    <button class='likeButton' onclick="likeComment({{ comment.id }}, this, {{ video.id }})">
+    <button class='likeButton' onclick="likeComment({{ comment.id }}, this, {{ comment.video_id }})">
       {% if comment.liked_by.filter_by(user_id=current_user.id).first() %}
       <img src="{{ url_for('static', filename='images/icons/thumb-up-active.png') }}">
       {% else %}
@@ -36,7 +36,7 @@
       {% endif %}
       <span class='text'></span>
     </button>
-    <button class='dislikeButton' onclick="dislikeComment({{ comment.id }}, this, {{ video.id }})">
+    <button class='dislikeButton' onclick="dislikeComment({{ comment.id }}, this, {{ comment.video_id }})">
       {% if comment.disliked_by.filter_by(user_id=current_user.id).first() %}
       <img src="{{ url_for('static', filename='images/icons/thumb-down-active.png') }}">
       {% else %}

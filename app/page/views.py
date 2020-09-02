@@ -5,16 +5,41 @@ from . import page
 from ..extensions import db
 from flask import render_template, redirect, url_for, send_from_directory, jsonify, request, current_app, abort
 from flask_login import login_required, current_user
-from ..models import User, Video, Category, LikeVideo, DislikeVideo, Comment, LikeComment, DislikeComment
+from ..models import User, Video, Category, LikeVideo, DislikeVideo, Comment, LikeComment, DislikeComment, Subscription
+from sqlalchemy import text
 
 
 @page.route('/')
 def index():
-    return render_template('index.html')
+
+    if current_user.is_authenticated:
+        sub_videos = Video.query.join(Subscription, Subscription.subscribed_id == Video.user_id).all()
+    else:
+        sub_videos = None
+
+    videos = Video.query.all()
+
+    return render_template('index.html', videos=videos, sub_videos=sub_videos)
 
 
 @page.route('/search')
 def search():
+
+    if request.args.get('term'):
+
+        search = "%{}%".format(request.args.get('term'))
+
+        temp_query = Video.query.filter(Video.title.ilike(search))
+
+        if request.args.get('orderBy') == 'uploadDate':
+            videos = temp_query.order_by(Video.created_at).all()
+        else:
+            videos = temp_query.order_by(Video.num_views).all()
+
+    
+        return render_template('search.html', videos=videos, term=request.args.get('term'))
+    
+
     return render_template('search.html')
 
 
@@ -48,19 +73,30 @@ def watch(id):
     return render_template('watch.html', video=video, comments=comments, replies=replies)
 
 
+@page.route('/subscriptions')
+@login_required
+def subscriptions():
+
+    videos = Video.query.join(Subscription, Subscription.subscribed_id == Video.user_id).all()
+    return render_template('subscriptions.html', videos=videos)
+
+
 @page.route('/trending')
 def trending():
-    return render_template('trending.html')
+
+    time_interval = text("NOW() - INTERVAL '7 DAYS'")
+    videos = Video.query.filter(Video.created_at > time_interval).limit(15).all()
+
+    return render_template('trending.html', videos=videos)
 
 
 @page.route('/likedVideos')
+@login_required
 def likedVideos():
-    return render_template('likedVideos.html')
 
+    videos = Video.query.join(LikeVideo, LikeVideo.video_id == Video.id).filter(LikeVideo.user_id == current_user.id).all()
 
-@page.route('/editVideos')
-def editVideos():
-    return render_template('editVideo.html')
+    return render_template('likedVideos.html', videos=videos)
 
 
 @page.route('/uploads/<path:filepath>')
@@ -68,7 +104,6 @@ def uploads(filepath):
     return send_from_directory(current_app.config['UPLOAD_DIR'], filepath)
 
 
-# ajax
 @page.route('/postComment', methods=['POST'])
 def postComment():
 
@@ -95,6 +130,31 @@ def getCommentReplies():
     replies = Comment.query.filter_by(video_id=request.form['videoId'], reply_id=request.form['commentId'])
 
     return render_template('reply.html', replies=replies)
+
+
+@page.route('/subscribe', methods=['POST'])
+@login_required
+def subscribe():
+
+    subscriber_id = request.form['userFrom']
+    subscribed_id = request.form['userTo']
+
+    subscription = Subscription.query.filter_by(subscriber_id=subscriber_id, subscribed_id=subscribed_id).first()
+    if subscription:
+        db.session.delete(subscription)
+        db.session.commit()
+    else:
+        subscription = Subscription(
+            subscriber_id=subscriber_id,
+            subscribed_id=subscribed_id,
+        )
+        db.session.add(subscription)
+        db.session.commit()
+        
+    count = Subscription.query.filter_by(subscribed_id=subscribed_id).count()
+
+    return str(count) 
+
 
 @page.route('/likeVideo', methods=['POST'])
 @login_required
@@ -134,6 +194,7 @@ def likeVideo():
 
     return jsonify(result)
 
+
 @page.route('/dislikeVideo', methods=['POST'])
 @login_required
 def dislikeVideo():
@@ -172,6 +233,7 @@ def dislikeVideo():
         }
 
     return jsonify(result)
+
 
 @page.route('/likeComment', methods=['POST'])
 @login_required
@@ -223,7 +285,7 @@ def dislikeComment():
 
         return str(1)
     else:
-        like = DislikeComment.query.filter_by(user_id=current_user.id, comment_id=comment.id).first()
+        like = LikeComment.query.filter_by(user_id=current_user.id, comment_id=comment.id).first()
         if like:
             count = 1
             db.session.delete(like)

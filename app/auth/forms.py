@@ -93,3 +93,19 @@ class VideoForm(FlaskForm):
         (0, 'Public'),
     ])
     category = SelectField('Category', coerce=int)
+
+
+class EditVideoForm(FlaskForm):
+    title = StringField('Title', validators=[
+        DataRequired(),
+        Length(max=70),
+    ])
+    description = TextAreaField('Description', validators=[
+        DataRequired(),
+        Length(max=1000),
+    ])
+    is_private = SelectField('Privacy', coerce=int, choices=[
+        (1, 'Private'),
+        (0, 'Public'),
+    ])
+    category = SelectField('Category', coerce=int)

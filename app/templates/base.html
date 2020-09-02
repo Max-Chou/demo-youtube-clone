@@ -58,43 +58,42 @@
       <div id="sideNavContainer" style="display:none;">
         <div class='navigationItems'>
           <div class='navigationItem'>
-            <a href='#'>
+            <a href="{{ url_for('page.index') }}">
                 <img src="{{ url_for('static', filename='images/icons/home.png') }}">
                 <span>Home</span>
             </a>
           </div>
 
           <div class='navigationItem'>
-            <a href='#'>
+            <a href="{{ url_for('page.trending') }}">
                 <img src="{{ url_for('static', filename='images/icons/trending.png') }}">
                 <span>Trending</span>
             </a>
           </div>
-
+          {% if current_user.is_authenticated %}
           <div class='navigationItem'>
-            <a href='#'>
+            <a href="{{ url_for('page.subscriptions') }}">
                 <img src="{{ url_for('static', filename='images/icons/subscriptions.png') }}">
                 <span>Subscriptions</span>
             </a>
           </div>
 
           <div class='navigationItem'>
-            <a href='#'>
+            <a href="{{ url_for('page.likedVideos') }}">
                 <img src="{{ url_for('static', filename='images/icons/thumb-up.png') }}">
                 <span>Liked Videos</span>
             </a>
           </div>
 
-          {% if current_user.is_authenticated %}
           <div class='navigationItem'>
-            <a href='#'>
+            <a href="{{ url_for('auth.settings', id=current_user.id) }}">
                 <img src="{{ url_for('static', filename='images/icons/settings.png') }}">
                 <span>Settings</span>
             </a>
           </div>
 
           <div class='navigationItem'>
-            <a href='#'>
+            <a href="{{ url_for('auth.logout') }}">
                 <img src="{{ url_for('static', filename='images/icons/logout.png') }}">
                 <span>Log Out</span>
             </a>
@@ -106,16 +105,12 @@
         </div>
 
       </div>
-
       <div id="mainSectionContainer">
+
         <div id="mainContentContainer">
-          {% for message in get_flashed_messages() %}
-          <div class="alert alert-warning">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            {{ message }}
-          </div>
-          {% endfor %}
+          
           {% block page_content %} {% endblock %}
+
         </div>
       </div>
     </div>

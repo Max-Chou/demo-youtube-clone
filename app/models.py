@@ -80,10 +80,10 @@ class Video(db.Model):
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    thumbnails = db.relationship('Thumbnail', backref='video', lazy='dynamic')
-    liked_by = db.relationship('LikeVideo', backref='video', lazy='dynamic')
-    disliked_by = db.relationship('DislikeVideo', backref='video', lazy='dynamic')
-    comments = db.relationship('Comment', backref='video', lazy='dynamic')
+    thumbnails = db.relationship('Thumbnail', backref='video', lazy='dynamic', cascade='all, delete-orphan')
+    liked_by = db.relationship('LikeVideo', backref='video', lazy='dynamic', cascade='all, delete-orphan')
+    disliked_by = db.relationship('DislikeVideo', backref='video', lazy='dynamic', cascade='all, delete-orphan')
+    comments = db.relationship('Comment', backref='video', lazy='dynamic', cascade='all, delete-orphan')
 
 
     # very easy way to increase views
@@ -157,8 +157,8 @@ class Comment(db.Model):
     reply_id = db.Column(db.Integer, db.ForeignKey('comments.id'))
 
 
-    liked_by = db.relationship('LikeComment', backref='comment', lazy='dynamic')
-    disliked_by = db.relationship('DislikeComment', backref='comment', lazy='dynamic')
+    liked_by = db.relationship('LikeComment', backref='comment', lazy='dynamic', cascade='all, delete-orphan')
+    disliked_by = db.relationship('DislikeComment', backref='comment', lazy='dynamic', cascade='all, delete-orphan')
 
 
 class LikeVideo(db.Model):

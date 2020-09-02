@@ -5,10 +5,10 @@ from flask_migrate import Migrate
 from app import create_app
 from app.extensions import db, login_manager
 from app.models import User, Video, Category, Thumbnail, LikeVideo, DislikeVideo, \
-    Comment, LikeComment, DislikeComment
+    Comment, LikeComment, DislikeComment, Subscription
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
-migrate = Migrate(app, db, render_as_batch=True) # this will fix alter in sqlite
+migrate = Migrate(app, db) # this will fix alter in sqlite
 
 category_cli = AppGroup('category')
 
@@ -16,7 +16,8 @@ category_cli = AppGroup('category')
 def make_shell_context():
     return dict(db=db, User=User, Video=Video, Category=Category, Thumbnail=Thumbnail,
                 LikeVideo=LikeVideo, DislikeVideo=DislikeVideo, Comment=Comment,
-                LikeComment=LikeComment, DislikeComment=DislikeComment)
+                LikeComment=LikeComment, DislikeComment=DislikeComment, 
+                Subscription=Subscription)
 
 
 @category_cli.command('init')

@@ -1,5 +1,5 @@
 function setNewThumbnail(thumbnailId, videoId, itemElement) {
-    $.post("ajax/updateThumbnail.php", { videoId: videoId, thumbnailId: thumbnailId })
+    $.post("/updateThumbnail.php", { videoId: videoId, thumbnailId: thumbnailId })
     .done(function() {
         var item = $(itemElement);
         var itemClass = item.attr("class");
