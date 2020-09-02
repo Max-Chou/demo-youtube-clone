@@ -30,6 +30,21 @@ And make a new `.env` by copying the `env.example`. The file contains the enviro
 
 If you successfully launch the web container and database container, open your browser and visit `localhost:8000`.
 
+
+## demo
+
+[Faketube](https://faketube.afai97202013.com)
+
+**Test Accounts**
+
+* Username: Jon Password: winteriscomming
+* Username: Cersei Password: imthequeen
+* Username: Gandalf Password: youshallnotpass
+
+
+You cannot signup or change the password on this demo.
+
+
 ## Notes for developers
 
 

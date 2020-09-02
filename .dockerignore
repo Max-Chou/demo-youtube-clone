@@ -1,0 +1,5 @@
+.env
+.vscode
+.gitignore
+*.sqlite
+*.md
